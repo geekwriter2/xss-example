@@ -6,13 +6,21 @@ from model import Message
 
 app = Flask(__name__)
 
+html_escape_chars = {
+   "&": "&amp;",
+   '"': "&quot;",
+   "'": "&apos;",
+   ">": "&gt;",
+   "<": "&lt;",
+   }
+
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
 
     if request.method == 'POST':
         m = Message(content=request.form['content'])
         m.save()
-
     body = """
 <html>
 <body>
@@ -31,10 +39,8 @@ def home():
 <div class="message">
 {}
 </div>
-""".format(m.content)
-# """.format(m.content.replace('<','&lt;').replace('>','&gt;'))
-    body = html.escape( """& < " ' >""")
-    return body 
+""".format(m.content.replace('<','&lt;').replace('>','&gt;'))
+    return body
 
 
 if __name__ == "__main__":
